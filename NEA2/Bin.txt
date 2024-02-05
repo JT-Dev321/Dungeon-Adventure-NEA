@@ -1,0 +1,497 @@
+﻿
+        // use has set to measure % of similarity, if too similar regenerate.
+        public void Generate(int roomcount) // use pathfinding to make a minimum number of moves from center
+        {
+            if (roomcount < 2) { roomcount = 2; }
+
+            roomcount -= 1;
+            const int size = 5;
+            int[,] Map = new int[size, size] { { 0, 0, 0, 0, 0 },
+                                               { 0, 0, 0, 0, 0 },
+                                               { 0, 0, 0, 0, 0 },
+                                               { 0, 0, 0, 0, 0 },
+                                               { 0, 0, 0, 0, 0 }
+                                              };
+            // check each coord see if adjacent to a value >= 1
+            Map[size / 2, size / 2] = 1;
+            Random rndm = new Random();
+            for (int i = roomcount; i > 0; i--)
+            {
+                List<List<int>> candidateCoords = new List<List<int>>();
+
+                for (int y = 0; y < size; y++)
+                {
+                    for (int x = 0; x < size; x++)
+                    {
+                        /*
+                        try // try catch is ignoring checking for coords on the top and left edge (since x-1 = -1)
+                        {
+                            if (Map[x, y] == 0 && (Map[x - 1, y] >= 1 || Map[x + 1, y] >= 1 || Map[x, y - 1] >= 1 || Map[x, y + 1] >= 1)) // if adj to >=1
+                            {
+                                candidateCoords.Add(new List<int>() { x, y });
+                            }
+                        }
+                        catch { }
+                        */
+
+                        while (true)
+                        {
+                            if (Map[x, y] == 0)
+                            {
+                                try
+                                {
+                                    if (Map[x - 1, y] >= 1)
+                                    {
+                                        candidateCoords.Add(new List<int>() { x, y });
+                                        break;
+                                    }
+                                }
+                                catch { }
+                                try
+                                {
+                                    if (Map[x + 1, y] >= 1)
+                                    {
+                                        candidateCoords.Add(new List<int>() { x, y });
+                                        break;
+                                    }
+                                }
+                                catch { }
+                                try
+                                {
+                                    if (Map[x, y - 1] >= 1)
+                                    {
+                                        candidateCoords.Add(new List<int>() { x, y });
+                                        break;
+                                    }
+                                }
+                                catch { }
+                                try
+                                {
+                                    if (Map[x, y + 1] >= 1)
+                                    {
+                                        candidateCoords.Add(new List<int>() { x, y });
+                                        break;
+                                    }
+                                }
+                                catch { }
+                                break;
+                            }
+                            break;
+                        }
+                    }
+                }
+                List<int> pos = candidateCoords[rndm.Next(0, candidateCoords.Count)];
+                Map[pos[0], pos[1]] = rndm.Next(1, 4);
+            }
+
+            // makes a random outside room 5 (exit)
+            List<List<int>> OutsideRooms = new List<List<int>>();
+            for (int i = 0; i < size; i++)
+            {
+                // Console.WriteLine($"Checking ({i}, {0}) is {Map[i, 0]}");
+                if (Map[i, 0] > 0)
+                {
+                    OutsideRooms.Add(new List<int>() { i, 0 });
+                }
+                // Console.WriteLine($"Checking ({0}, {i}) is {Map[0, i]}");
+                if (Map[0, i] > 0)
+                {
+                    OutsideRooms.Add(new List<int>() { 0, i });
+                }
+            }
+            for (int i = 0; i < size; i++)
+            {
+                // Console.WriteLine($"Checking ({i}, {4}) is {Map[i, 4]}");
+                if (Map[i, 4] > 0)
+                {
+                    OutsideRooms.Add(new List<int>() { i, 4 });
+                }
+                // Console.WriteLine($"Checking ({4}, {i}) is {Map[4, i]}");
+                if (Map[4, i] > 0)
+                {
+                    OutsideRooms.Add(new List<int>() { 4, i });
+                }
+            }
+            if (OutsideRooms.Count < 1) // if no room is on the outside
+            {
+                // check the next most outward concentric circle 
+                for (int i = 1; i < size - 1; i++)
+                {
+                    // Console.WriteLine($"Checking ({i}, {0}) is {Map[i, 0]}");
+                    if (Map[i, 1] > 0)
+                    {
+                        OutsideRooms.Add(new List<int>() { i, 1 });
+                    }
+                    // Console.WriteLine($"Checking ({0}, {i}) is {Map[0, i]}");
+                    if (Map[1, i] > 0)
+                    {
+                        OutsideRooms.Add(new List<int>() { 1, i });
+                    }
+                }
+                for (int i = 1; i < size - 1; i++)
+                {
+                    // Console.WriteLine($"Checking ({i}, {4}) is {Map[i, 4]}");
+                    if (Map[i, 3] > 0)
+                    {
+                        OutsideRooms.Add(new List<int>() { i, 3 });
+                    }
+                    // Console.WriteLine($"Checking ({4}, {i}) is {Map[4, i]}");
+                    if (Map[3, i] > 0)
+                    {
+                        OutsideRooms.Add(new List<int>() { 3, i });
+                    }
+                }
+            }
+            int OutsideChoice = rndm.Next(0, OutsideRooms.Count);
+            Map[OutsideRooms[OutsideChoice][0], OutsideRooms[OutsideChoice][1]] = 5;
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    Console.Write(Map[y, x] + " ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("----------");
+
+            Dictionary<List<int>, List<List<int>>> MapAdjMatrix = new Dictionary<List<int>, List<List<int>>>(); // do i need this
+
+            // potentially redundant below
+            for (int y = 0; y < size; y++) // looping thru all points
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    if (Map[x, y] >= 1) // if its a room
+                    {
+                        List<int> currentCoord = new List<int>() { x, y };
+                        MapAdjMatrix.Add(currentCoord, new List<List<int>>()); // add it to a dictionary as the key with empty 2d array of ints as val
+                        int[,] AdjCoordArr = new int[4, 2] { { x - 1, y }, { x + 1, y }, { x, y - 1 }, { x, y + 1 } }; // all adj points
+
+
+
+                        // loop to construct adj matrix
+                        for (int i = 0; i < 4; i++)
+                        {
+                            // Console.WriteLine($"Adjacent point number {i+1}\n{AdjCoordArr[i, 0]}, {AdjCoordArr[i, 1]}\n\n");
+
+                            if (!(AdjCoordArr[i, 0] < 0 || AdjCoordArr[i, 0] > 4 || AdjCoordArr[i, 1] < 0 || AdjCoordArr[i, 1] > 4))
+                            {
+                                MapAdjMatrix[currentCoord].Add(new List<int>() { AdjCoordArr[i, 0], AdjCoordArr[i, 1] });
+                            }
+
+
+
+                            /*MapAdjMatrix[new List<int> { x, y }] // index previously created dictionary by current point
+                                .Add(new List<int> { AdjCoordArr[i, 0], // x coord of adj point
+                                                    AdjCoordArr[i, 1] // y coord of adj point
+                                                    }); // Add coordinates of adjacent point*/
+
+
+                        }
+                    }
+                }
+            }
+
+            for (int y = 0; y < size; y++) // sets room types in room map
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    RoomContent rt = RoomContent.Empty;
+                    switch (Map[y, x])
+                    {
+                        case 0:
+                            rt = RoomContent.nulled;
+                            break;
+                        case 1:
+                            rt = RoomContent.Empty;
+                            break;
+                        case 2:
+                            rt = RoomContent.EasyEnemy;
+                            break;
+                        case 3:
+                            rt = RoomContent.HardEnemy;
+                            break;
+                        case 4:
+                            rt = RoomContent.Reward;
+                            break;
+                        case 5:
+                            rt = RoomContent.Exit;
+                            break;
+                    }
+                    //if (x != size / 2)
+
+                    RoomMap[y, x] = new DungeonRoom(rt, this, y, x);
+
+                    //else
+
+                    //this.Origin = new DungeonRoom(RoomContent.Empty, x, y);
+
+                }
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        public void Attack(Character source, Character target, Ability ability, bool isRecursive = false)
+        {
+            /*
+                None, - 
+                DrainMana, -
+                Bullseye, -
+                ConfirmCrit, - 
+                Piercing, - 
+                Frost, -
+                SplashR, SplashLR, SplashAll,
+
+                Burn, -
+                Poison, - 
+                Weaken, - 
+                Strengthify, - 
+                HPRegen, - 
+                ManaRegen, - 
+            */
+            int damage = ability.Damage;
+            bool missed = ability.MissChance > rndm.NextDouble();
+            bool dodged = target.DodgeChance > rndm.NextDouble();
+            bool crit = target.CritChance > rndm.NextDouble();
+            //bullseye
+            if (ability.effect == Ability.SpecialEffect.Bullseye) { missed = false; dodged = false; }
+            // ConfirmCrit
+            if (ability.effect == Ability.SpecialEffect.ConfirmCrit) { crit = true; }
+            
+            if (!missed && !dodged)
+            {
+                // mana drain
+                if (ability.effect == Ability.SpecialEffect.DrainMana)
+                {
+                    int drainamount = rndm.Next(0, 11);
+                    if (target.Mana - drainamount < 0)
+                    {
+                        target.Mana = 0;
+                    }
+                    else
+                    {
+                        target.Mana -= drainamount;
+                    }
+                }
+                // crit
+                if (crit)
+                {
+                    damage *= 2;
+                }
+                // splash
+                if (!isRecursive)
+                {
+                    if (ability.effect == Ability.SpecialEffect.SplashR)
+                    {
+                        int index = Array.IndexOf(Enemies, target);
+                        if (index + 1 < 4 && index != 4)
+                        {
+                            Attack(source, Enemies[index + 1], ability, true);
+                        }
+                    }
+                    if (ability.effect == Ability.SpecialEffect.SplashLR)
+                    {
+                        int index = Array.IndexOf(Enemies, target);
+                        if (index - 1 >= 0 && index != 0)
+                        {
+                            Attack(source, Enemies[index - 1], ability, true);
+                        }
+                        if (index + 1 < 4 && index != 4)
+                        {
+                            Attack(source, Enemies[index + 1], ability, true);
+                        }
+                    }
+                    if (ability.effect == Ability.SpecialEffect.SplashAll)
+                    {
+                        int index = Array.IndexOf(Allies, target);
+                        foreach (Character c in Enemies)
+                        {
+                            if (c != Enemies[index])
+                            {
+                                Attack(source, c, ability, true);
+                            }
+                        }
+                    }
+                }
+            }
+            // piercing
+            if (!(ability.effect == Ability.SpecialEffect.Piercing))
+            {
+                damage *= 1 - (target.Armour / 100);
+            }
+            if (ability.effect == Ability.SpecialEffect.Frost)
+            {
+                target.Speed -= (int)(target.Speed * 0.8);
+            }
+            damage = (int)(damage * (1 + ((source.Level / 10) / 3)));
+
+            target.Health -= damage;
+            if (!isRecursive)
+            {
+                source.Health -= ability.Costs.Health;
+                source.Mana -= ability.Costs.Mana;
+            }
+            target.ValidateStatsCombat();
+            source.ValidateStatsCombat();
+
+            // if health = 0 blah blah blah
+        }
+        
+
+
+        if (c.CharType == CharacterType.Hero && !(c.Health <= 0))
+                {
+                    c.HighlightForCombat();
+
+                    // Disable all other ally abil buttons
+                    foreach (Character ch in OrderedChars)
+                    {
+                        if (ch != c && ch.CharType == CharacterType.Hero)
+                        {
+                            ch.DisableAbilityButtons();
+                        }
+                    }
+
+                    // take ability choice
+
+                    ComboBox CB_AllyChoice = new ComboBox();
+                    CB_AllyChoice.Location = new Point(10, 10);
+                    CB_AllyChoice.DataSource = c.Abilities;
+                    CB_AllyChoice.DisplayMember = "Damage";
+                    CB_AllyChoice.ValueMember = "MissChance";
+                    CB_AllyChoice.Refresh();
+                    CB_AllyChoice.Show();
+
+
+                    List<int> validInputs = new List<int>();
+                    Console.WriteLine($"--------------------------------");
+                    Console.WriteLine("------------Select a move-------");
+                    Console.WriteLine($"--------------------------------");
+                    for (int k = 1; k <= c.Abilities.Length; k++)
+                    {
+                        Ability a = c.Abilities[k-1];
+                        string name = a.GetType().ToString().Split('.')[1];
+                        string healthcost = a.Costs.Health.ToString();
+                        string manacost = a.Costs.Mana.ToString();
+                        string damage = a.Damage.ToString();
+                        string critmult = a.CritChanceMult.ToString();
+                        string misschance = a.MissChance.ToString();
+                        string effect = a.effect.ToString();
+                        string allyspell = a.TargetsAllies.ToString();
+                        string targets = "{ ";
+                        foreach (var v in a.TargetablePositions)
+                        {
+                            targets += v.ToString() + ", ";
+                        }
+                        targets.Remove(targets.Length - 2, 2);
+                        targets += " }";
+
+                        Console.WriteLine($"--------------------------------");
+                        Console.WriteLine($"Ability {k}: {name}");
+                        Console.WriteLine($"--------------------------------");
+                        Console.WriteLine($"Costs:");
+                        Console.WriteLine($"  - Health: {healthcost}");
+                        Console.WriteLine($"  - Mana: {manacost}");
+                        Console.WriteLine();
+                        Console.WriteLine($"Attributes:");
+                        Console.WriteLine($"  - Damage: {damage}");
+                        Console.WriteLine($"  - Crit Multiplier: {critmult}");
+                        Console.WriteLine($"  - Miss Chance: {misschance}");
+                        Console.WriteLine();
+                        Console.WriteLine($"Misc:");
+                        Console.WriteLine($"  - Effect: {effect}");
+                        Console.WriteLine($"  - Targets Allies: {allyspell}");
+                        Console.WriteLine($"  - Targetable Positions: {targets}");
+                        Console.WriteLine();
+                        validInputs.Add(k);
+                    }
+                    
+                    int input;
+                    Ability chosenAbility;
+                    while (true)
+                    {
+                        try
+                        {
+                            Console.WriteLine($"-----------------------------------------------");
+                            Console.Write("-Input the number for the move you wish to use: ");
+                            input = Convert.ToInt16(Console.ReadLine());
+                            if (validInputs.Contains(input))
+                            {
+                                chosenAbility = c.Abilities[input - 1];
+                                break;
+                            }
+                            throw new Exception("Catch me");
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Please enter a valid choice");
+                        }
+                    }
+
+                    Console.WriteLine($"-----------------------------------------------");
+                    Console.Clear();
+
+                    // highlight elidgible targets 
+                    // take selection of target & do action
+
+                    List<int> validchoices = new List<int>();
+
+                    Console.WriteLine($"--------------------------------");
+                    Console.WriteLine("----------Select a target-------");
+                    Console.WriteLine($"--------------------------------");
+                    foreach (int j in chosenAbility.TargetablePositions)
+                    {
+                        if (j != -1)
+                        {
+                            Enemies[j - 1].HighlightForSelection();
+                            validchoices.Add(j);
+                            Console.Write($"{j}, ");
+                        }
+                    }
+
+
+                    Character target;
+
+                    while (true)
+                    {
+                        try
+                        {
+                            Console.WriteLine($"--------------------------------");
+                            Console.Write("Input the character's number: ");
+                            input = Convert.ToInt16(Console.ReadLine());
+                            if (validchoices.Contains(input))
+                            {
+                                target = Enemies[input - 1];
+                                break;
+                            }
+                            throw new Exception("Catch me");
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Please enter a valid choice");
+                        }
+                    }
+
+                    chosenAbility.Execute(c, target);
+
+                    foreach(Character enemy in Enemies)
+                    {
+                        enemy.UnHighlight();
+                    }
+                    c.UnHighlight();
+
+                }
+                else
+                {
+
+                }

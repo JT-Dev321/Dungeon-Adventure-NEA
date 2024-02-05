@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D873B4D2-2091-471D-AE36-88576A2DB548}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>NEA2</RootNamespace>
+    <AssemblyName>NEA2</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bin.txt" />
+    <Compile Include="CustomDungeons\CustomDungeonMapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomDungeons\CustomDungeonMapForm.Designer.cs">
+      <DependentUpon>CustomDungeonMapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomDungeons\CustomDungeonSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomDungeons\CustomDungeonSelect.Designer.cs">
+      <DependentUpon>CustomDungeonSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gameplay\AbilityInputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Gameplay\AbilityInputForm.Designer.cs">
+      <DependentUpon>AbilityInputForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gameplay\Ability.cs" />
+    <Compile Include="Gameplay\Game.cs" />
+    <Compile Include="DungeonForms\MapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DungeonForms\MapForm.Designer.cs">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gameplay\CombatHandlers.cs" />
+    <Compile Include="HamletForms\WagonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HamletForms\WagonForm.Designer.cs">
+      <DependentUpon>WagonForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomDungeons\Custom Dungeon Logic\SaveHandling.cs" />
+    <Compile Include="Save Handling\SaveFileNameInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Save Handling\SaveFileNameInput.Designer.cs">
+      <DependentUpon>SaveFileNameInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils.cs" />
+    <Compile Include="Gameplay\DungeonClasses.cs" />
+    <Compile Include="Gameplay\RoomInteractions.cs" />
+    <Compile Include="HamletForms\BarracksForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HamletForms\BarracksForm.Designer.cs">
+      <DependentUpon>BarracksForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DungeonForms\DungeonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DungeonForms\DungeonForm.Designer.cs">
+      <DependentUpon>DungeonForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DungeonForms\EstateMapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DungeonForms\EstateMapForm.Designer.cs">
+      <DependentUpon>EstateMapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HamletForms\HamletForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HamletForms\HamletForm.Designer.cs">
+      <DependentUpon>HamletForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HamletForms\HospitalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HamletForms\HospitalForm.Designer.cs">
+      <DependentUpon>HospitalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Gameplay\Character.cs" />
+    <Compile Include="Save Handling\MainMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Save Handling\MainMenu.Designer.cs">
+      <DependentUpon>MainMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="HamletForms\StagecoachForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HamletForms\StagecoachForm.Designer.cs">
+      <DependentUpon>StagecoachForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Save Handling\SaveFileNameInput.resx">
+      <DependentUpon>SaveFileNameInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="bin\Debug\roomicons\Empty.png" />
+    <None Include="bin\Debug\roomicons\Nulled.png" />
+    <EmbeddedResource Include="CustomDungeons\CustomDungeonMapForm.resx">
+      <DependentUpon>CustomDungeonMapForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomDungeons\CustomDungeonSelect.resx">
+      <DependentUpon>CustomDungeonSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DungeonForms\DungeonForm.resx">
+      <DependentUpon>DungeonForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DungeonForms\EstateMapForm.resx">
+      <DependentUpon>EstateMapForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DungeonForms\MapForm.resx">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gameplay\AbilityInputForm.resx">
+      <DependentUpon>AbilityInputForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HamletForms\BarracksForm.resx">
+      <DependentUpon>BarracksForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HamletForms\HamletForm.resx">
+      <DependentUpon>HamletForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HamletForms\HospitalForm.resx">
+      <DependentUpon>HospitalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HamletForms\StagecoachForm.resx">
+      <DependentUpon>StagecoachForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HamletForms\WagonForm.resx">
+      <DependentUpon>WagonForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Save Handling\MainMenu.resx">
+      <DependentUpon>MainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="GameCD.cd" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TownImg.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\TownImg.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
