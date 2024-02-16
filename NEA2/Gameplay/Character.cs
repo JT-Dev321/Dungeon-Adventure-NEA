@@ -326,9 +326,9 @@ namespace NEA2
             {
                 return $"{ClassName} - {Name}";
             } }
-        public float CritChance; // 0-1
-        public float DodgeChance; // 0-1
-        public float Speed; // really anything, for normal chars 0-10
+        public float CritChance; 
+        public float DodgeChance; 
+        public float Speed; 
         public int Mana { get; set; } 
         public int Health { get; set; }
         public int MaxHealth, MaxMana;
@@ -408,12 +408,6 @@ namespace NEA2
             }
             this.Controls.ManaBar.Value = this.Mana;
             this.Controls.ManaBar.Refresh();
-        }
-        public void LevelUp()
-        {
-            this.Level += 1;
-            this.InitializeStats();
-            this.ValidateStats();
         }
         public void SetName()
         {

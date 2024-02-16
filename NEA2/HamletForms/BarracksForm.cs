@@ -108,8 +108,6 @@ namespace NEA2
         {
             if (SelectHero_CMB.SelectedItem != null && SelectHero_CMB.SelectedItem != prevSelection)
             {
-
-
                 Character c = (Character)SelectHero_CMB.SelectedItem;
                 prevSelection = c;
 
@@ -119,9 +117,6 @@ namespace NEA2
                 cc.RefreshStatLabels();
 
                 this.Invalidate();
-
-                // Create and position new labels
-                // int padding = 25;
 
                 string CritText = cc.LBL_Crit.Text;
                 string ArmourText = cc.LBL_Armour.Text;
@@ -139,33 +134,9 @@ namespace NEA2
 
                 BaseX = HPLabel.Location.X; BaseY = HPLabel.Location.Y;
 
-                /*
-                cc.LBL_HPFraction.Location = new Point(BaseX, BaseY);
-                cc.LBL_HPFraction.Text = $"Health: {c.Health}/{c.MaxHealth}";
-                dynamicLabels.Add(cc.LBL_HPFraction);
-
-                cc.LBL_ManaFraction.Location = new Point(BaseX, BaseY + padding);
-                cc.LBL_ManaFraction.Text = $"Mana: {c.Mana}/{c.MaxMana}";
-                dynamicLabels.Add(cc.LBL_ManaFraction);
-
-                cc.LBL_Crit.Location = new Point(BaseX, cc.LBL_ManaFraction.Location.Y + padding);
-                dynamicLabels.Add(cc.LBL_Crit);
-
-                cc.LBL_Dodge.Location = new Point(BaseX, cc.LBL_Crit.Location.Y + padding);
-                dynamicLabels.Add(cc.LBL_Dodge);
-
-                cc.LBL_Speed.Location = new Point(BaseX, cc.LBL_Dodge.Location.Y + padding);
-                dynamicLabels.Add(cc.LBL_Speed);
-
-                cc.LBL_Armour.Location = new Point(BaseX, cc.LBL_Speed.Location.Y + padding);
-                dynamicLabels.Add(cc.LBL_Armour);
-                */
-
                 CurrentCost = 2000;
 
                 ConfirmButton.Text = $"Level up | Cost: {CurrentCost}";
-
-
                 
                 var className = c.GetType();
 
@@ -179,19 +150,7 @@ namespace NEA2
                 tempChar.DodgeChance = SelectedHero.DodgeChance < tempChar.DodgeChance ? tempChar.DodgeChance : (float)Math.Round(SelectedHero.DodgeChance * 1.15f, 2);
                 tempChar.Armour = SelectedHero.Armour < tempChar.Armour ? tempChar.Armour : (int)Math.Ceiling(SelectedHero.Armour * 1.15f);
                 tempChar.Speed = SelectedHero.Speed < tempChar.Speed ? tempChar.Speed : (int)Math.Round(SelectedHero.Speed * 1.15f, 2);
-                /*
-                while (SelectedHero.MaxHealth > CandidateCharacter.MaxHealth || 
-                SelectedHero.MaxMana > CandidateCharacter.MaxMana || 
-                SelectedHero.CritChance > CandidateCharacter.CritChance || 
-                SelectedHero.DodgeChance > CandidateCharacter.DodgeChance || 
-                SelectedHero.Armour > CandidateCharacter.Armour || 
-                SelectedHero.Speed > CandidateCharacter.Speed)
-                {
-                    CandidateCharacter = (Character)Activator.CreateInstance(className, new object[] { CharacterType.Hero, c.Level + 1 });
-                }
-                */
-
-                // tempChar.InitializeStats();
+                
                 tempChar.Controls = new CharacterControls(tempChar, tempChar.Abilities, tempChar.MaxHealth, tempChar.MaxMana);
                 var tempCC = tempChar.Controls;
 
@@ -212,31 +171,6 @@ namespace NEA2
                 CandidateCharacter = tempChar;
 
                 ShowArrows();
-
-                /*
-                tempCC.LBL_HPFraction.Location = new Point(BaseX + cc.LBL_HPFraction.Width, BaseY);
-                tempCC.LBL_HPFraction.Text = $"Health: {tempChar.Health}/{tempChar.MaxHealth}";
-                dynamicLabels.Add(tempCC.LBL_HPFraction);
-
-                tempCC.LBL_ManaFraction.Location = new Point(BaseX + cc.LBL_ManaFraction.Width, BaseY + tempCC.LBL_HPFraction.Height);
-                tempCC.LBL_ManaFraction.Text = $"Mana: {tempChar.Mana}/{tempChar.MaxMana}";
-                dynamicLabels.Add(tempCC.LBL_ManaFraction);
-
-                tempCC.LBL_Crit.Location = new Point(BaseX + cc.LBL_Crit.Width, tempCC.LBL_ManaFraction.Location.Y + tempCC.LBL_ManaFraction.Height);
-                dynamicLabels.Add(tempCC.LBL_Crit);
-
-                tempCC.LBL_Dodge.Location = new Point(BaseX + cc.LBL_Dodge.Width, tempCC.LBL_Crit.Location.Y + tempCC.LBL_Crit.Height);
-                dynamicLabels.Add(tempCC.LBL_Dodge);
-
-                tempCC.LBL_Speed.Location = new Point(BaseX + cc.LBL_Speed.Width, tempCC.LBL_Dodge.Location.Y + tempCC.LBL_Dodge.Height);
-                dynamicLabels.Add(tempCC.LBL_Speed);
-
-                tempCC.LBL_Armour.Location = new Point(BaseX + cc.LBL_Armour.Width, tempCC.LBL_Speed.Location.Y + tempCC.LBL_Speed.Height);
-                dynamicLabels.Add(tempCC.LBL_Armour);
-                */
-
-
-                // Add new labels to the form's Controls collection
 
                 if (CurrentCost < game.Gold)
                 {

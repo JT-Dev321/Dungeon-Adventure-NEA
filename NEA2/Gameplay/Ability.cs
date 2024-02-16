@@ -100,12 +100,6 @@ namespace NEA2
             {
                 return this.GetType().ToString().Split('.')[1];
             } }
-        Random rndm = new Random();
-
-        public Ability()
-        {
-
-        }
 
         public override string ToString()
         {

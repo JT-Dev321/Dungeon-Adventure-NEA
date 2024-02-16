@@ -30,17 +30,6 @@ namespace NEA2.CustomDungeons
                 return flatpbArr.Count(x => x.Tag != null && int.TryParse(x.Tag.ToString(), out int tagValue) && tagValue == 5);
             }
         }
-        /*
-        private Dictionary<int, Color> ColorDict = new Dictionary<int, Color>
-            {
-                { 0, Color.Black },
-                { 1, Color.White },
-                { 2, Color.Orange },
-                { 3, Color.Red },
-                { 4, Color.Gold },
-                { 5, Color.Green }
-            };
-        */
         private Dictionary<int, Image> BackImgDict = new Dictionary<int, Image>
             {
                 { 0, Image.FromFile("roomicons/Nulled.png") },
@@ -170,61 +159,5 @@ namespace NEA2.CustomDungeons
         }
 
 
-        /*
-        private bool CheckValidGrid()
-        {
-            for (int x = 0; x < 5; x++)
-            {
-                for (int y = 0; y < 5; y++)
-                {
-                    if (!(IsAdjacentToValue(new Coordinate(x, y), GetNumGrid())) && Convert.ToInt16(pbArr[x, y].Tag) >= 1)
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        private bool IsAdjacentToValue(Coordinate coord, int[,] Map) // self explanatory
-        {
-            Coordinate[] adjCoords = new Coordinate[]
-            {
-                new Coordinate(coord.X - 1, coord.Y),
-                new Coordinate(coord.X + 1, coord.Y),
-                new Coordinate(coord.X, coord.Y - 1),
-                new Coordinate(coord.X, coord.Y + 1)
-            };
-
-            foreach (var adjCoord in adjCoords)
-            {
-                Console.WriteLine($"Checking whether {coord.X}, {coord.Y} is adjacent to anything");
-                if (IsInBounds(adjCoord) && Map[adjCoord.X, adjCoord.Y] >= 1)
-                {
-                    Console.WriteLine("It is");
-                    return true;
-                }
-            }
-            Console.WriteLine("It isnt");
-            return false;
-        }
-
-        private bool IsInBounds(Coordinate coord) // within bounds of array's size
-        {
-            return coord.X >= 0 && coord.X < 5 && coord.Y >= 0 && coord.Y < 5;
-        }
-        private int[,] GetNumGrid()
-        {
-            int[,] temp = new int[5, 5];
-            for (int x = 0; x < 5; x++)
-            {
-                for (int y = 0; y < 5; y++)
-                {
-                    temp[x, y] = Convert.ToInt16(pbArr[x, y].Tag);
-                }
-            }
-            return temp;
-        }
-        */
     }
 }

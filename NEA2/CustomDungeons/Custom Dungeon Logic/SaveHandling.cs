@@ -114,54 +114,6 @@ namespace NEA2
 
             return output;
         }
-        public static Dungeon ParseFromFile(string filepath, Game game)
-        {
-            StreamReader sr = new StreamReader(filepath);
-
-            string data = sr.ReadLine();
-
-            string output = "";
-
-            float diff = (float)Convert.ToDouble(data.Split('|')[1]);
-
-            foreach (string pair in data.Split('|')[2].Split(','))
-            {
-                string[] splitpair = pair.Split(':');
-                string character = splitpair[0];
-                int freq = Convert.ToInt16(splitpair[1].ToString());
-
-                for (int i = 0; i < freq; i++)
-                {
-                    output += character;
-                }
-
-            }
-
-            int[,] map = new int[5, 5];
-
-            int k = 0;
-
-            for (int y = 0; y < 5; y++)
-            {
-                for (int x = 0; x < 5; x++)
-                {
-                    map[y, x] = Convert.ToInt16(Convert.ToString(output[k]));
-                    k++;
-                }
-            }
-
-            for (int y = 0; y < 5; y++)
-            {
-                for (int x = 0; x < 5; x++)
-                {
-                    Console.Write(map[y, x] + " ");
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine("----------");
-
-            return new Dungeon(game, diff, map, data.Split('|')[0]);
-        }
         public static Dungeon DGN_ParseFromKey(string key, Game game)
         {
             string data = key;

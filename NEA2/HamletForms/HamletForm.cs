@@ -74,7 +74,7 @@ namespace NEA2
         {
             if (this.game.SavePath == null)
             {
-                Utils.ShowForm(new SaveFileNameInput(game, null));
+                Utils.ShowForm(new SaveFileNameInput(this.game));
             }
             else
             {

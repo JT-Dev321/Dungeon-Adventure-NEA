@@ -43,9 +43,6 @@ namespace NEA2
         {
 
         }
-        // add cost for finding new character, random character, class stats, etcc.....
-        // purchase price calculated from stats & level etc
-        // add separate function where player can swap out members of their party
         private void StagecoachForm_Load(object sender, EventArgs e)
         {
             this.Size = new Size(1000, 900);
@@ -74,12 +71,10 @@ namespace NEA2
             for (int i = 0; i < SaleList.Count; i++)
             {
                 Character c = SaleList[i];
-                //Console.WriteLine($"{i}: " + c.FullTitle);
-                // somethings wrong
+                
                 PictureBox pb = c.Controls.Picture;
                 Form form = this;
                 CharacterControls cc = c.Controls;
-                // 20 padding between each, 
                 
 
                 int x = 10;

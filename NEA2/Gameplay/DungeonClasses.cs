@@ -12,6 +12,7 @@ using System.Windows.Forms;
 
 namespace NEA2
 {
+
     public enum RoomContent
     {
         nulled = 0,
@@ -122,14 +123,19 @@ namespace NEA2
         public void Generate(int roomcount)
         {
 
-            // DO PATHFINDING TO MAKE BETTER MAPS
-
             if (roomcount < 2) { roomcount = 2; }
-            roomcount -= 1;
+            roomcount -= 1; // to account for the exit room being added at the end
             int[,] Map = new int[size, size];
             Map[size / 2, size / 2] = 1;
 
             Random rndm = new Random();
+
+            Dictionary<int, int> PotentialRoomContents = new Dictionary<int, int>() { { 1, 99 }, 
+                                                                                      { 2, (int)(roomcount / 1.75) }, 
+                                                                                      { 3, (int)(roomcount / 3.3) }, 
+                                                                                      { 4, roomcount / 7 } 
+            };
+
             // loop generates a temporary list of "candidates"
             // (adjacent points in the array) for a new room to be created on.
             for (int i = roomcount; i > 0; i--) 
@@ -147,60 +153,74 @@ namespace NEA2
                     }
                 }
                 Coordinate chosenCoord = candidateCoords[rndm.Next(0, candidateCoords.Count)];
-                Map[chosenCoord.X, chosenCoord.Y] = rndm.Next(1, 5);
+
+                int candidateRoomContents = rndm.Next(1, 5);
+                while (PotentialRoomContents[candidateRoomContents] <= 0)
+                {
+                    candidateRoomContents = rndm.Next(1, 5);
+                }
+
+                Map[chosenCoord.X, chosenCoord.Y] = candidateRoomContents; // random room contents excluding exit (done last)
+                PotentialRoomContents[candidateRoomContents] -= 1;
             }
 
             // following chunk of loops/ifs sets the "exit" room to a random existing room that is the furthest from the center as possible.
-            List<List<int>> OutsideRooms = new List<List<int>>();
+            List<Coordinate> OutsideRooms = new List<Coordinate>();
+            
+            // check the very outer concentric circle first
             for (int i = 0; i < size; i++)
             {
                 if (Map[i, 0] > 0)
                 {
-                    OutsideRooms.Add(new List<int>() { i, 0 });
+                    OutsideRooms.Add(new Coordinate(i, 0));
                 }
                 if (Map[0, i] > 0)
                 {
-                    OutsideRooms.Add(new List<int>() { 0, i });
+                    OutsideRooms.Add(new Coordinate(0, i));
                 }
             }
             for (int i = 0; i < size; i++)
             {
                 if (Map[i, 4] > 0)
                 {
-                    OutsideRooms.Add(new List<int>() { i, 4 });
+                    OutsideRooms.Add(new Coordinate(i, 4 ));
                 }
                 if (Map[4, i] > 0)
                 {
-                    OutsideRooms.Add(new List<int>() { 4, i });
+                    OutsideRooms.Add(new Coordinate(4, i));
                 }
             }
+
+            // if the outside circle was empty, check the next concentric circle
             if (OutsideRooms.Count < 1)
             {
                 for (int i = 1; i < size - 1; i++)
                 {
                     if (Map[i, 1] > 0)
                     {
-                        OutsideRooms.Add(new List<int>() { i, 1 });
+                        OutsideRooms.Add(new Coordinate(i, 1));
                     }
                     if (Map[1, i] > 0)
                     {
-                        OutsideRooms.Add(new List<int>() { 1, i });
+                        OutsideRooms.Add(new Coordinate(1, i));
                     }
                 }
                 for (int i = 1; i < size - 1; i++)
                 {
                     if (Map[i, 3] > 0)
                     {
-                        OutsideRooms.Add(new List<int>() { i, 3 });
+                        OutsideRooms.Add(new Coordinate(i, 3));
                     }
                     if (Map[3, i] > 0)
                     {
-                        OutsideRooms.Add(new List<int>() { 3, i });
+                        OutsideRooms.Add(new Coordinate(3, i));
                     }
                 }
             }
             int OutsideChoice = rndm.Next(0, OutsideRooms.Count);
-            Map[OutsideRooms[OutsideChoice][0], OutsideRooms[OutsideChoice][1]] = 5; // 5 means the room is the exit
+            Map[OutsideRooms[OutsideChoice].X, OutsideRooms[OutsideChoice].Y] = 5; // 5 means the room is the exit
+
+
             for (int y = 0; y < size; y++) // formats it nicely
             {
                 for (int x = 0; x < size; x++)
@@ -329,30 +349,25 @@ namespace NEA2
                 {
                     if (RoomMap[y, x].IsVisible)
                     {
-                        RoomContent content = RoomMap[y, x].RoomType;  // Assuming RoomMap contains the DungeonRoom objects and RoomType is accessible
+                        RoomContent content = RoomMap[y, x].RoomType;  
                         switch (content)
                         {
                             case RoomContent.nulled:
                                 pbArr[y, x].Hide();
                                 break;
                             case RoomContent.Empty:
-                                //pbArr[y, x].BackColor = Color.Gray;
                                 pbArr[y, x].BackgroundImage = Image.FromFile("roomicons/empty.png");
                                 break;
                             case RoomContent.EasyEnemy:
-                                //pbArr[y, x].BackColor = Color.Orange;
                                 pbArr[y, x].BackgroundImage = Image.FromFile("roomicons/Easy.png");
                                 break;
                             case RoomContent.HardEnemy:
-                                //pbArr[y, x].BackColor = Color.Red;
                                 pbArr[y, x].BackgroundImage = Image.FromFile("roomicons/Hard.png");
                                 break;
                             case RoomContent.Reward:
-                                //pbArr[y, x].BackColor = Color.Gold;
                                 pbArr[y, x].BackgroundImage = Image.FromFile("roomicons/Reward.png");
                                 break;
                             case RoomContent.Exit:
-                                //pbArr[y, x].BackColor = Color.LimeGreen;
                                 pbArr[y, x].BackgroundImage = Image.FromFile("roomicons/Exit.png");
                                 break;
                         }
@@ -389,21 +404,15 @@ namespace NEA2
         public bool IsExplored = false;
         public bool IsVisible = false;
         protected RoomInteractions RI;
-        protected string backdropFilePath;
         protected Random rndm = new Random();
 
         public DungeonRoom(RoomContent roomCont, Dungeon dungeon)
         {
             RoomType = roomCont;
             this.Dungeon = dungeon;
-            this.backdropFilePath = $"roombackdrops/room{rndm.Next(0, 5)}.png";
         }
 
-        public void SetContent(RoomContent roomCont)
-        {
-            this.RoomType = roomCont;
-        }
-
+        
         public virtual void Initialise()
         {
             SharedInitialise();
@@ -440,7 +449,6 @@ namespace NEA2
             RoomType = roomCont;
             this.Dungeon = dungeon;
             this.enemies = GenerateEnemyArr();
-            this.backdropFilePath = $"roombackdrops/room{rndm.Next(0, 5)}.png";
         }
         private Character[] GenerateEnemyArr()
         {
@@ -470,17 +478,19 @@ namespace NEA2
                 c.ShowControls();
             }
         }
-        public void HideEnemyControls()
-        {
-            foreach (Character c in enemies)
-            {
-                c.HideControls();
-            }
-        }
         public void ConcludeRoom(bool Victory)
         {
             this.Dungeon.DungeonForm.ViewMap.Enabled = true;
             this.Dungeon.DungeonForm.BTN_GoBack.Enabled = true;
+
+            if (Victory)
+            {
+                this.Dungeon.game.AddXp(3500);
+            }
+            else
+            {
+                this.Dungeon.game.AddXp(1500);
+            }
         }
     }
     public class RewardRoom : DungeonRoom
@@ -491,7 +501,6 @@ namespace NEA2
         {
             RoomType = roomCont;
             this.Dungeon = dungeon;
-            this.backdropFilePath = $"roombackdrops/room{rndm.Next(0, 5)}.png";
             this.GoldReward = (int)(rndm.Next(800, 1501) * this.Dungeon.game.Level * this.Dungeon.DifficultyMult);
         }
         public override void Initialise()
@@ -515,6 +524,7 @@ namespace NEA2
         private void RewardCollect_Click(object sender, EventArgs e)
         {
             this.Dungeon.game.Gold += this.GoldReward;
+            this.Dungeon.game.AddXp(500 * this.Dungeon.DifficultyMult);
             ((Button)sender).Enabled = false;
             this.Claimed = true;
         }

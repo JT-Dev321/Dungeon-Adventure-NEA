@@ -13,22 +13,6 @@ namespace NEA2
 {
     public class Game
     {
-        // hash set to store cool events that happened,
-        // like a really low dodge % suceeding
-        /*
-        Game
-        - MainMenu
-        - EstateMap
-        - Dungeon[1-5]
-        -- MapForm[1-5]
-        - Hamlet
-        -- HamletForms[1-4]
-        */
-
-        
-
-
-
         public int Experience { get; private set; } // changes
         public int Level 
         { 
@@ -47,7 +31,7 @@ namespace NEA2
 
         public Game()
         { 
-            this.Gold = 999999;
+            this.Gold = 500;
             this.Experience = 1000;
             Dungeons = new Dungeon[5] { new Dungeon(this, 0.5f, 6), 
                                         new Dungeon(this, 0.8f, 8), 
@@ -87,14 +71,12 @@ namespace NEA2
                 Party[counter] = CharacterFactory.CreateCharacterFromKey(key);
                 counter++;
             }
-            counter = 0;
             if (splitKey[3].Split(new string[] { ":\n" }, StringSplitOptions.None)[1] != "N/A")
             {
                 List<string> OwnedKeys = splitKey[3].Split(new string[] { ":\n" }, StringSplitOptions.None)[1].Split('\n').ToList();
                 foreach (string key in OwnedKeys)
                 {
-                    OwnedCharacters[counter] = CharacterFactory.CreateCharacterFromKey(key);
-                    counter++;
+                    OwnedCharacters.Add(CharacterFactory.CreateCharacterFromKey(key));
                 }
             }
             // make character key parser
@@ -124,6 +106,14 @@ namespace NEA2
             else { return null; }
         }
 
+        public void AddXp(int amount)
+        {
+            this.Experience += (int)(amount * (1 + (this.Level * 0.4)));
+        }
+        public void AddXp(double amount)
+        {
+            this.Experience += (int)(amount * (1 + (this.Level * 0.4)));
+        }
         public string Save()
         {
             string output = "";
@@ -161,7 +151,6 @@ namespace NEA2
             {
                 output += dgn.Get_Save_Key() + "\n";
             }
-            // dungeons dont save properly with all rooms MAYBE HAPPENING WHEN HAVENT LOADED - probn ot
             Console.WriteLine(output);
             return output;
         }

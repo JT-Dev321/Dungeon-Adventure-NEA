@@ -39,7 +39,7 @@ namespace NEA2
         {
             // savegames - name of folder
 
-            Utils.ShowForm(new SaveFileNameInput(null, this));
+            Utils.ShowForm(new SaveFileNameInputLoad(this));
         }
     }
 }

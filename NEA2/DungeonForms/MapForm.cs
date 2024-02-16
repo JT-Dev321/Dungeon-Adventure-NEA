@@ -95,6 +95,7 @@ namespace NEA2
 
                     this.Invalidate();
                     this.Hide();
+
                     this.dungeon.RoomMap[x, y].Initialise();
                     UpdateVisibility(currentCoord);
 
@@ -148,6 +149,7 @@ namespace NEA2
 
                 this.Invalidate();
                 this.Hide();
+                
                 this.dungeon.RoomMap[x, y].Initialise();
                 UpdateVisibility(currentCoord);
 

@@ -10,6 +10,60 @@ using System.Xml;
 
 namespace NEA2.Gameplay
 {
+    class CombatTurnOrder
+    {
+        private List<Character> OrderedChars { get; set; } // left to right : quickest to slowest
+        private CombatInstance CI;
+        private int CurrentIndex = 0;
+        public CombatTurnOrder(CombatInstance CI)
+        {
+            this.CI = CI;
+            OrderedChars = CI.Allies.Concat(CI.Enemies).OrderByDescending(c => c.Speed).ToList();
+        }
+
+        private void ReOrder()
+        {
+            OrderedChars = CI.Allies.Concat(CI.Enemies).OrderByDescending(c => c.Speed).ToList();
+        }
+
+        private void ClearDead()
+        {
+            List<Character> copy = OrderedChars;
+
+            for (int i = 0; i < copy.Count; i++)
+            {
+                Character c = copy[i];
+                if (c.isDead)
+                {
+                    OrderedChars.Remove(c);
+                }
+            }
+        }
+
+        public Character GetNextChar()
+        {
+            int index = CurrentIndex;
+            if (CurrentIndex + 1 < OrderedChars.Count)
+            {
+                CurrentIndex++;
+                if (!OrderedChars[index].isDead)
+                {
+                    return OrderedChars[index];
+                }
+                else
+                {
+                    return GetNextChar();
+                }
+            }
+            // "else"
+            this.ClearDead();
+            this.ReOrder();
+            this.CurrentIndex = 0;
+            return OrderedChars[CurrentIndex];
+        }
+    }
+
+
     public class RoomInteractions
     {
         private DungeonRoom room;
@@ -130,12 +184,9 @@ namespace NEA2.Gameplay
     {
         private EnemyRoom room;
         public Character[] Enemies = new Character[4];
-        public List<Character> OrderedChars;
-        private int counter = 0;
-        private int maxCount;
+        private CombatTurnOrder CTO;
         public Button NextTurnBTN;
         public Label TurnInfoLBL;
-        private List<string> TurnHistory = new List<string>();
         public bool HasConcluded = false;
         public void LoadEnemyControls()
         {
@@ -237,15 +288,6 @@ namespace NEA2.Gameplay
                 }
             }
         }
-        public void GenSpeedOrderChars()
-        {
-
-            OrderedChars = base.Allies.Where(c => !c.isDead)
-                         .Concat(Enemies.Where(e => !e.isDead))
-                         .OrderByDescending(c => c.Speed)
-                         .ToList(); maxCount = OrderedChars.Count;
-            // ADD PROPER SORTING ALGORITHM
-        }
         public void RefreshAllStatLBLs()
         {
             foreach (Character c in base.Allies.Concat(Enemies))
@@ -258,12 +300,10 @@ namespace NEA2.Gameplay
         {
             this.room = room;
             this.Enemies = enemies;
+            this.CTO = new CombatTurnOrder(this);
         }
         public void CombatStart()
         {
-
-            GenSpeedOrderChars();
-
             Form form = this.room.Dungeon.DungeonForm;
 
             NextTurnBTN = new Button();
@@ -296,20 +336,16 @@ namespace NEA2.Gameplay
 
         public void ExecuteNextTurn(object sender, EventArgs e)
         {
-            int i = this.counter;
             if (Allies.All(x => x.Health <= 0) || Enemies.All(x => x.Health <= 0))
             {
                 HasConcluded = true;
+                this.room.Dungeon.DungeonForm.Controls.Remove(this.NextTurnBTN);
+                this.TurnInfoLBL.Text = "---| Combat Concluded |---";
             }
-            if (i < maxCount && !HasConcluded)
+            if (!HasConcluded)
             {
-                Character c = this.OrderedChars[i];
-                /*
-                foreach(Character character in this.OrderedChars)
-                {
-                    CombatTurnHandler.TickSpecialFX(character);
-                }
-                */
+                Character c = this.CTO.GetNextChar();
+                
                 if (!c.isDead)
                 {
                     if (c.CharType == CharacterType.Hero)
@@ -385,7 +421,8 @@ namespace NEA2.Gameplay
                                 ChosenTarget = LowestEN;
                             }
                         }
-                        
+                        if (ChosenTarget == null) { ChosenTarget = LowestEN; }
+                        if (ChosenAbility == null) { ChosenAbility = Utils.RemoveSupportAbilities(c.Abilities).OrderBy(a => a.Damage).Last(); }
                         CombatTurnHandler.HandleCombatInteraction(c, ChosenTarget, ChosenAbility, this);
                     }
                 }
@@ -397,7 +434,6 @@ namespace NEA2.Gameplay
                 {
                     character.AddMana(5);
                 }
-                this.counter++;
             }
             else
             {
@@ -406,14 +442,6 @@ namespace NEA2.Gameplay
                     this.NextTurnBTN.Enabled = false;
                     this.NextTurnBTN.Refresh();
                     this.room.ConcludeRoom(Enemies.All(x => x.Health <= 0));
-                }
-                else
-                {
-                    if (i >= maxCount)
-                    {
-                        this.counter = 0;
-                        GenSpeedOrderChars();
-                    }
                 }
             }
             // OrderedChars = OrderedChars.Where(x => x.isDead != true).ToList();

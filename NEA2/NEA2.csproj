@@ -93,6 +93,12 @@
     <Compile Include="Save Handling\SaveFileNameInput.Designer.cs">
       <DependentUpon>SaveFileNameInput.cs</DependentUpon>
     </Compile>
+    <Compile Include="Save Handling\SaveFileNameInputLoad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Save Handling\SaveFileNameInputLoad.Designer.cs">
+      <DependentUpon>SaveFileNameInputLoad.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Gameplay\DungeonClasses.cs" />
     <Compile Include="Gameplay\RoomInteractions.cs" />
@@ -143,6 +149,9 @@
     </Compile>
     <EmbeddedResource Include="Save Handling\SaveFileNameInput.resx">
       <DependentUpon>SaveFileNameInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Save Handling\SaveFileNameInputLoad.resx">
+      <DependentUpon>SaveFileNameInputLoad.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="bin\Debug\roomicons\Empty.png" />
     <None Include="bin\Debug\roomicons\Nulled.png" />

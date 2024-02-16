@@ -80,13 +80,6 @@ namespace NEA2
                 typeof(Weaken),
                 typeof(DivineShield),
         };
-        public static void ShowCharsControls(Character[] characters)
-        {
-            foreach (Character c in characters)
-            {
-                c.ShowControls();
-            }
-        }
         public static void RemoveTempControls(Form form)
         {
             for (int i = form.Controls.Count - 1; i >= 0; i--)
@@ -410,15 +403,6 @@ namespace NEA2
             RandomNameList.Remove(name);
             return name;
         }
-        public static bool IsValidInteger(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return false;
-            }
-
-            return Regex.IsMatch(input, @"^-?\d+$");
-        }
         private static List<string> DungeonNames = new List<string>
         {
             "Crypt of the Raging Queen",
@@ -459,6 +443,7 @@ namespace NEA2
             return choice;
         }
 
+
         public static Ability[] RemoveSupportAbilities(Ability[] abilities)
         {
             return abilities.Where(a =>
@@ -466,14 +451,6 @@ namespace NEA2
                 a.GetType() != typeof(DivineIntervention) ||
                 a.GetType() != typeof(DivineShield) ||
                 a.GetType() != typeof(SmokeBomb)).ToArray();
-        }
-        public static Ability[] RemoveCombatAbilities(Ability[] abilities)
-        {
-            return abilities.Where(a =>
-                a.GetType() == typeof(Heal) ||
-                a.GetType() == typeof(DivineIntervention) ||
-                a.GetType() == typeof(DivineShield) ||
-                a.GetType() == typeof(SmokeBomb)).ToArray();
         }
     }
     

@@ -240,10 +240,6 @@ namespace NEA2.Gameplay
             Console.WriteLine(output);
             CI.TurnInfoLBL.Text = output;
             return output;
-            // you were fixing combat stuff and doing turns and displaying the above message
-            
         }
-
     }
-
 }
